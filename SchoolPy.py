@@ -168,6 +168,7 @@ log("SchoolPy v. 1.0.0 is starting. Definitions was defined right now.")
 # Modules
 #
 
+from requests import get
 import os
 procmsg("Загрузка datetime")
 import datetime
@@ -272,7 +273,13 @@ while True:
                 if str(user_id) in moders or str(user_id) in admins:
                     #setschedule
                     if text.startswith("setschedule"):
-                        writeTo(text.replace("setschedule ", ""), "schedule.txt")
+                        try:
+                            url = obj['attachments'][0]['doc']['url']
+                            download = get(url)
+                            text = download.text.encode('latin1').decode('utf-8')
+                            writeTo(text, "schedule.txt")
+                        except:
+                            writeTo(text.replace("setschedule ", ""), "schedule.txt")
                         log("Changed schedule to " + text.replace("setschedule ", ""))
                         message("Расписание сохранено.")
 
